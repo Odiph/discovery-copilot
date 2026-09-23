@@ -22,7 +22,7 @@ PyAudioWPatch==0.2.12.8
 # pulls Pillow transitively for the square-pixel PNG QR fallback -- not separately
 # pinned, so it does not count against test_gate_three's literal-line dependency count.
 fastapi==0.141.1
-uvicorn==0.52.1
+uvicorn==0.53.0
 qrcode[pil]==8.2
 
 # Phase 4 (04-01-PLAN.md §C7, 04-RESEARCH.md §7): the official Python SDK for
