@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Interview review</title>
+  <link rel="stylesheet" href="/review.css">
+</head>
+<body>
+  <header>
+    <h1 id="heading">Interview review</h1>
+    <p class="sub" id="subheading"></p>
+    <!--
+      The hub is scoped to a PROJECT and the interview is chosen here. It used
+      to be a session id typed onto the command line, which is a real reason
+      the close-out never happened: reading one call meant knowing its
+      timestamp before you could look at it.
+    -->
+    <!--
+      A save's confirmation lives HERE, outside every container the re-render
+      empties. It used to be written onto the card that asked for it, where the
+      re-read that follows a successful save destroyed it a moment later — the
+      operator saw nothing and the test that "proved" otherwise was holding a
+      detached node.
+    -->
+    <p class="save-banner" id="save-banner" hidden></p>
+    <!--
+      WHO was interviewed. In the header, beside the interview it belongs to,
+      because it is part of identifying the call rather than a finding about
+      it — and because the counting rule every number further down rests on is
+      participants-by-session, which nothing recorded until this field existed.
+
+      Almost every interview on disk has no label, so the empty state is the
+      normal rendering of this box and not a failure mode: it says nobody is
+      named and offers the box to say so in, rather than showing a blank where
+      a name should be.
+    -->
+    <div class="participant" id="participant"></div>
+    <p class="picker-row" id="picker-row" hidden>
+      <label for="session-picker">Interview</label>
+      <select id="session-picker"></select>
+      <span class="note" id="picker-note"></span>
+    </p>
+  </header>
+
+  <!--
+    Standing leads. Every research tool surveyed ends its post-interview
+    screen at "evidence captured"; the question none of them answer is which
+    belief this call moved. That is the one thing above the fold here.
+  -->
+  <!--
+    The one thing on this page that changes anything. The coach only ever
+    PROPOSES a state; the set moves when you say so, here, with the evidence
+    the proposal rests on in front of you.
+  -->
+  <!--
+    First on the page, before the proposals and the standings, because every
+    number below it is conditional on extraction having run. Until that is
+    stated, "Nothing supports this yet" reads as a finding whether or not
+    anything was ever looked at.
+  -->
+  <div id="extraction" class="extraction" hidden></div>
+
+  <section>
+    <h2>Proposed state changes</h2>
+    <p class="note" id="no-proposals" hidden>
+      This interview proposed no hypothesis state changes.
+    </p>
+    <div id="proposals"></div>
+  </section>
+
+  <section>
+    <h2>Where each hypothesis stands</h2>
+    <p class="note" id="no-hypotheses" hidden>
+      No hypotheses authored for this project yet.
+    </p>
+    <div id="standings"></div>
+  </section>
+
+  <!--
+    Create and fill in, not full CRUD. The hub is the post-interview surface,
+    and a casual edit of an existing rule here is exactly the target-painting
+    `criterion_registered_after` exists to catch — so editing is offered, but
+    never without its price on screen beside the button.
+  -->
+  <section>
+    <h2>Add a hypothesis</h2>
+    <div id="new-hypothesis"></div>
+  </section>
+
+  <!--
+    Two answers, not one, because they lead to different actions: what this
+    call covered, and what the PROJECT has still never asked. The second is
+    the one that decides what to do in the next interview, and it is the one
+    a per-session view can never give.
+  -->
+  <section>
+    <h2>Survey coverage</h2>
+    <p class="note" id="coverage-note"></p>
+    <div id="coverage"></div>
+  </section>
+
+  <!--
+    Counts, not prose. Every claim this interview produced is already drawn
+    above with its own quote and citation; what a reader cannot get by
+    scrolling is the shape of the call as a whole -- how much was said, how
+    much of it the model inferred rather than heard, and how much of it
+    reached a belief.
+  -->
+  <section>
+    <h2>This interview in numbers</h2>
+    <div id="summary"></div>
+  </section>
+
+  <!--
+    Directly above the transcript, deliberately: it is a summary OF the thing
+    underneath it, and the reader who doubts the ratio can scroll two inches
+    to check it. It is also the only measure on this page that costs no model
+    call — the words were always on disk and nothing was counting them.
+  -->
+  <section>
+    <h2>Who did the talking</h2>
+    <p class="note" id="talk-share-note"></p>
+    <div id="talk-share"></div>
+  </section>
+
+  <section>
+    <h2>Transcript</h2>
+    <p class="note" id="no-transcript" hidden>No transcript for this session.</p>
+    <div id="transcript"></div>
+  </section>
+
+  <p class="error" id="page-error" hidden></p>
+  <script src="/review.js"></script>
+</body>
+</html>

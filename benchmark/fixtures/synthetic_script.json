@@ -1,0 +1,20 @@
+{
+  "_comment": "Throwaway harness fixture (phase_specification S7a, Task 2). Authored by the executor, ground truth known by construction. NEVER a benchmark result — see benchmark/README.md. Hebrew matrix language with deliberate mid-sentence switches into English (product/metric/tool/day-of-week names), plus a few English-first utterances that finish in Hebrew.",
+  "utterances": [
+    {"text": "אני עובד ב-Google כבר שלוש שנים והתפקיד שלי מאוד מעניין.", "locale": "he-IL"},
+    {"text": "בפגישה של יום Monday דיברנו על ה-roadmap הרבעוני של הצוות.", "locale": "he-IL"},
+    {"text": "הבאג הזה קרה רק ב-production ולא הצלחנו לשחזר אותו ב-staging.", "locale": "he-IL"},
+    {"text": "צריך לעדכן את ה-database לפני שמתחילים את ה-deployment הבא.", "locale": "he-IL"},
+    {"text": "אתמול עשיתי code review על ה-pull request של דני מהצוות.", "locale": "he-IL"},
+    {"text": "התוצאות של ה-benchmark היו הרבה יותר טובות מהצפוי שלנו.", "locale": "he-IL"},
+    {"text": "נעביר את הפגישה השבועית ליום Wednesday בבוקר במקום Thursday.", "locale": "he-IL"},
+    {"text": "המשתמשים דיווחו על bug קריטי במערכת ה-billing שלנו.", "locale": "he-IL"},
+    {"text": "אנחנו צריכים להריץ את כל ה-tests לפני שעושים merge לענף הראשי.", "locale": "he-IL"},
+    {"text": "ה-latency של ה-API עלה משמעותית מאז השבוע שעבר.", "locale": "he-IL"},
+    {"text": "Let's schedule a follow-up call ונדבר על זה שוב בשבוע הבא.", "locale": "en-US"},
+    {"text": "Good morning everyone, היום נדבר על ה-metrics של הרבעון האחרון.", "locale": "en-US"},
+    {"text": "השרת קרס אתמול בגלל memory leak שלא זיהינו מספיק מהר.", "locale": "he-IL"},
+    {"text": "כדאי לבדוק את ה-logs לפני שסוגרים את ה-ticket הזה.", "locale": "he-IL"},
+    {"text": "The client asked about pricing this morning אבל לא היה לנו מספר מדויק להציע.", "locale": "en-US"}
+  ]
+}

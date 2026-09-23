@@ -1,0 +1,13 @@
+// The two extensions this project actually needs. Nothing else -- a longer
+// list is clutter a newcomer has to evaluate.
+//
+// Note there is deliberately NO devcontainer in this repository. PyAudioWPatch
+// ships win_amd64 wheels only, and WASAPI loopback captures the HOST machine's
+// default render endpoint. A container could not record an interview; offering
+// one would look like support and be a trap.
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.debugpy"
+  ]
+}

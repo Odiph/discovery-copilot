@@ -1,0 +1,8 @@
+[
+  {
+    "id": "h1",
+    "statement": "Slow onboarding is the primary reason new customers churn in their first month.",
+    "falsifier": "If interviewees who churned within their first month report a different primary reason (missing a feature, price, a competitor switch) more often than slow onboarding, this hypothesis is false.",
+    "state": "untested"
+  }
+]

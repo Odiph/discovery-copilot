@@ -1,0 +1,5 @@
+[
+  {"id": "s1", "order": 0, "text": "Walk me through how your team onboards a new customer today."},
+  {"id": "s2", "order": 1, "text": "When was the last time onboarding took longer than expected? What happened?"},
+  {"id": "s3", "order": 2, "text": "Who is involved in a typical onboarding, from kickoff to first value?"}
+]

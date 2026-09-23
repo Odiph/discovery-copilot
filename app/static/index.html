@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--
+  D-05: this page is only ever reachable beneath the per-run token path.
+  D-03: the suggestion region ships now, resting and non-collapsing, so
+  Phase 4 slots content into an existing region instead of re-laying-out the
+  transcript rendering D-04 verifies against a real phone.
+  No third-party origin is ever loaded from this page (no CDN, no web font,
+  no analytics) -- a page that loads a remote resource could carry the token
+  off-device in a referrer header, and there is no third party in this
+  architecture to send it to anyway.
+  03-02: the title stays generic on purpose (SURF-04) -- never the
+  customer's name, never "live transcript" -- because an OS notification
+  banner or a window-list thumbnail can surface a title even when the
+  window itself is not shared in a screen-share.
+-->
+<title>Interview</title>
+<link id="app-stylesheet" rel="stylesheet">
+</head>
+<body>
+  <!--
+    Phase A: which knowledge the coach is grounded in. Fixed for the whole
+    run, so it is set once from `hello` and never updated again. Starts
+    HIDDEN and stays hidden for an unprojected run -- the common single-
+    project case must look exactly as it did before this existed, rather
+    than gaining a strip saying "no project".
+  -->
+  <div id="grounding-region" class="grounding-region" hidden>
+    <p class="grounding-text" dir="ltr"></p>
+  </div>
+  <!--
+    Phase C: the survey's next unasked question, always visible. Above the
+    coach's own follow-ups because it is the thing that is ALWAYS there:
+    it needs no model call, so it can never be delayed by a slow one or
+    emptied by a failing one. Its resting text says the survey is loading,
+    never "no questions" -- the empty-survey and survey-finished states are
+    real states the server reports, not the absence of a message.
+  -->
+  <div id="next-question-region" class="next-question-region">
+    <p class="next-question-label" dir="ltr">Next question</p>
+    <p class="next-question-resting" dir="ltr">&mdash; waiting for the survey &mdash;</p>
+  </div>
+  <!--
+    The coach's own follow-ups, ADDITIONAL to the next question above and
+    never a replacement for it. Its "Follow-ups" heading is rendered by
+    app.js as part of each swapped-in set rather than living here, because
+    this region is the one region app.js CLEARS on every new set (04-03 §E3)
+    -- a heading placed here would survive exactly until the first
+    suggestion arrived and then vanish.
+  -->
+  <div id="suggestion-region" class="suggestion-region">
+    <p class="suggestion-resting" dir="ltr">&mdash; no suggestions &mdash;</p>
+  </div>
+  <!--
+    03-02 (§Q6/§Q7, OPS-05, SURF-06): a laptop-side failure, server-pushed
+    and surviving a reconnect -- visually and verbally distinct from the
+    phone-side gap marker that lives INSIDE transcript-region below. Starts
+    hidden; app.js only ever un-hides it while `status !== "healthy"`.
+  -->
+  <div id="server-status-region" class="server-status-region" hidden></div>
+  <div id="transcript-region" class="transcript-region"></div>
+  <script>
+    (function () {
+      // The token lives in this page's own URL already -- derive every
+      // sibling asset/socket path from it instead of hardcoding or
+      // templating a value server-side. Keeps the static files free of any
+      // per-run substitution step.
+      var base = window.location.pathname.replace(/\/$/, "");
+      document.getElementById("app-stylesheet").setAttribute("href", base + "/style.css");
+      // type="module" so app.js's `import ... from "./live-state.mjs"`
+      // resolves relative to THIS token-scoped path, and the browser's own
+      // served content type governs (never a build step or bundler).
+      var script = document.createElement("script");
+      script.type = "module";
+      script.src = base + "/app.js";
+      document.body.appendChild(script);
+    })();
+  </script>
+</body>
+</html>

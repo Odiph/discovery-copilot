@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Interview console</title>
+  <link rel="stylesheet" href="/console.css">
+</head>
+<body>
+  <h1>Interview console</h1>
+  <p class="hint">Loopback only. Pick where this interview gets filed, then start it.</p>
+
+  <div class="columns">
+    <section class="panel">
+      <h2>Projects</h2>
+      <!--
+        Filled from /api/projects. A node's indent is its depth, because a
+        project is a nested LABEL and the hierarchy is the whole point of
+        the picker.
+      -->
+      <ul id="project-tree" class="tree"></ul>
+      <p id="tree-empty" class="empty" hidden>
+        No projects yet. Create one by running
+        <code>python -m app author --project &lt;name&gt;</code>.
+      </p>
+    </section>
+
+    <section class="panel">
+      <h2 id="detail-heading">Select a project</h2>
+
+      <div id="detail" hidden>
+        <h3>Survey</h3>
+        <ol id="survey-list" class="survey"></ol>
+        <p id="survey-error" class="error" hidden></p>
+
+        <h3>Hypotheses</h3>
+        <ul id="hypothesis-list" class="hypotheses"></ul>
+        <p id="hypothesis-error" class="error" hidden></p>
+
+        <h3>Accumulated facts</h3>
+        <p id="fact-count" class="fact-count"></p>
+        <p id="facts-error" class="error" hidden></p>
+
+        <h3>Past interviews</h3>
+        <ul id="session-list" class="sessions"></ul>
+
+        <!--
+          Extra sources. Offered ONLY for nodes under the same root, and the
+          server re-checks that on every Start -- this filter is a
+          convenience for the operator, never the rule.
+        -->
+        <h3>Also draw on</h3>
+        <ul id="source-picker" class="sources"></ul>
+        <p class="hint">
+          Read-only, and facts and hypotheses only. The brief and survey always
+          come from the project above.
+        </p>
+
+        <button id="start-button" type="button">Start interview</button>
+        <p id="start-error" class="error" hidden></p>
+        <p id="start-done" class="done" hidden></p>
+      </div>
+    </section>
+  </div>
+
+  <script src="/console.js"></script>
+</body>
+</html>

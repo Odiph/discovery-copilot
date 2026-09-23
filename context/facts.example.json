@@ -1,0 +1,35 @@
+[
+  {
+    "id": "f1",
+    "session_id": "20260101T090000",
+    "seqs": [
+      4,
+      5
+    ],
+    "claim": "Onboarding a new customer takes about three weeks and happens mostly over email.",
+    "provenance": "evidence",
+    "quoted_text": "we onboard a new customer in about three weeks, mostly by email",
+    "bearings": [
+      {
+        "hypothesis_id": "h1",
+        "stance": "supports"
+      }
+    ]
+  },
+  {
+    "id": "f2",
+    "session_id": "20260101T090000",
+    "seqs": [
+      9
+    ],
+    "claim": "The team may be especially sensitive to onboarding delays, given how small it is.",
+    "provenance": "inference",
+    "quoted_text": "",
+    "bearings": [
+      {
+        "hypothesis_id": "h1",
+        "stance": "unclear"
+      }
+    ]
+  }
+]

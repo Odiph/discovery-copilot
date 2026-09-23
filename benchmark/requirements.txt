@@ -1,0 +1,12 @@
+# Pinned exact versions of the seven packages verified against PyPI + their
+# source repos in 01-01-PLAN.md Task 1 (blocking human checkpoint, approved).
+# `av` is pulled in transitively by faster-whisper (>=11) and is not pinned here
+# separately — see phase_specification S8.
+
+faster-whisper==1.2.1
+ctranslate2==4.8.1
+jiwer==4.0.0
+assemblyai==0.64.32
+websockets==17.0.1
+edge-tts==7.2.8
+pytest==9.1.1

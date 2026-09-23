@@ -1,0 +1,71 @@
+{
+  "identical_hypothesis": {
+    "reference": "א ב google",
+    "hypothesis": "א ב google",
+    "note": "hypothesis == reference, one switch (he->en). Every rate is 0; switch_penalty_ratio is undefined (0/0), not a crash."
+  },
+  "neutral_digit_does_not_suppress_switch": {
+    "reference": "א ב 5 google",
+    "note": "a neutral digit token sitting between a Hebrew and an English token does not hide the switch (S3). Expect exactly one switch point: (1, 3)."
+  },
+  "overlapping_windows_merge": {
+    "reference": "א ב google day ה ו",
+    "hypothesis": "א ב google day ה ו",
+    "note": "two switches, (1,2) and (3,4), whose W=3 windows overlap and merge into one union covering all 6 tokens. n_window_tokens must be 6, not 5+5."
+  },
+  "errors_inside_window_only": {
+    "reference": "א ב ג ד google day ה ו ט י",
+    "hypothesis": "א ב ג ד other day ה ו ט י",
+    "note": "switches at (3,4) and (5,6); W=3 union window = {1..8}, outside = {0,9}. Substituting index 4 (google->other, inside window) drives switch_adjacent_wer up while non_switch_wer stays exactly 0. switch_penalty_ratio is then non-zero/zero -> reported as 'inf', not a crash."
+  },
+  "errors_outside_window_only": {
+    "reference": "א ב ג ד google day ה ו ט י",
+    "hypothesis": "ת ב ג ד google day ה ו ט י",
+    "note": "same ref as errors_inside_window_only. Substituting index 0 (outside the window) leaves switch_adjacent_wer at exactly 0 while non_switch_wer rises."
+  },
+  "insertion_both_bounding_in_window": {
+    "reference": "א ב ג ד google day ה ו ט י",
+    "hypothesis": "א ב ג ד google extra day ה ו ט י",
+    "note": "insertion gap p=5 is bounded by ref index 4 and ref index 5, both inside the {1..8} window -> attributed to the window (switch_adjacent_wer rises), non_switch_wer stays 0."
+  },
+  "insertion_no_window_token_either_side": {
+    "reference": "א ב google ג ד ה ו ז ח ט י day כ ל",
+    "hypothesis": "א ב google ג ד ה ו extra ז ח ט י day כ ל",
+    "note": "each isolated foreign word (google, day) produces TWO switch points (entering and leaving), so windows are wider than a single switch would suggest: union window = {0,1,2,3,4,5,8,9,10,11,12,13} (n=12), leaving two consecutive outside tokens at indices {6,7}. An insertion at gap p=7, bounded by (6,7) which are BOTH outside the window, is NOT attributed to the window: switch_adjacent_wer stays 0, non_switch_wer rises to 1/2."
+  },
+  "insertion_mixed_boundary": {
+    "reference": "א ב ג ד ה google ו ז ח ט",
+    "hypothesis": "א ב extra ג ד ה google ו ז ח ט",
+    "note": "the isolated foreign word (google, index 5) produces TWO switch points -- (4,5) and (5,6) -- so the W=3 union window is {2,3,4,5,6,7,8} (n=7), outside={0,1,9}. Insertion gap p=2 is bounded by ref index 1 (outside window) and ref index 2 (inside window) -- a genuine mixed boundary. The 'at least one in-window' rule means this IS attributed to the window: switch_adjacent_wer rises to 1/7 even though one side is outside; non_switch_wer stays 0 (all three outside tokens are unchanged)."
+  },
+  "insertion_before_first_token_attributed": {
+    "reference": "google ב ג ד ה ו",
+    "hypothesis": "extra google ב ג ד ה ו",
+    "note": "switch at (0,1); W=3 window={0,1,2,3}, outside={4,5}. Insertion at gap p=0 (before the first token) has only one bounding token, ref index 0, which is inside the window -> attributed by that single token alone."
+  },
+  "insertion_after_last_token_attributed": {
+    "reference": "א ב ג ד ה ו google",
+    "hypothesis": "א ב ג ד ה ו google extra",
+    "note": "switch at (5,6); W=3 window={3,4,5,6}, outside={0,1,2}. Insertion at gap p=7 (after the last token) has only one bounding token, ref index 6, which is inside the window -> attributed by that single token alone."
+  },
+  "insertion_after_last_token_not_attributed": {
+    "reference": "א ב ג ד google ה ו ט י כ",
+    "hypothesis": "א ב ג ד google ה ו ט י כ extra",
+    "note": "the isolated foreign word (google, index 4) produces switches (3,4) and (4,5); W=3 union window={1,2,3,4,5,6,7} (n=7), outside={0,8,9}. Insertion at gap p=10 (after the last token, n_ref=10) has only one bounding token, ref index 9, which is OUTSIDE the window -> not attributed by that single token alone. non_switch_wer rises to 1/3."
+  },
+  "side_split_english_only_errors": {
+    "reference": "א ב ג ד google day ה ו ט י",
+    "hypothesis": "א ב ג ד other day ה ו ט י",
+    "note": "same ref/window as errors_inside_window_only ({1..8}). English-side window tokens are indices {4,5} (google, day); Hebrew-side are {1,2,3,6,7,8}. The single substitution at index 4 is English-side only: switch_adjacent_wer_en_side rises, switch_adjacent_wer_he_side stays 0 -- the BENCH-03b discriminator."
+  },
+  "wrong_script_transliteration": {
+    "reference": "א ב ג ד google day ה ו ט י",
+    "hypothesis": "א ב ג ד גוגל day ה ו ט י",
+    "note": "index 4 (google, tagged en) is substituted with a Hebrew-script transliteration (tagged he). Counts once in wrong_script_rate AND once as a WER substitution -- not exclusive."
+  },
+  "sensitivity_w2_w3_w5": {
+    "reference": "א ב ג ד google day ה ו ט י",
+    "hypothesis": "א ב ג ד google day ה ו ט י",
+    "note": "same ref as errors_inside_window_only, identical hypothesis. n_window_tokens at W=2, W=3, W=5 must be monotonically non-decreasing as W grows (6, 8, 10) and each rate independently reportable."
+  }
+}

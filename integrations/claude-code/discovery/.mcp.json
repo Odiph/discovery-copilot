@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "discovery-copilot": {
+      "type": "stdio",
+      "command": "${DISCOVERY_COPILOT_HOME}/.venv/Scripts/python.exe",
+      "args": ["-m", "app.mcp"],
+      "env": {
+        "PYTHONPATH": "${DISCOVERY_COPILOT_HOME}"
+      }
+    }
+  }
+}

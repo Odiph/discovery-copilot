@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--
+  04-03-PLAN.md §E4: served ONLY by app/web/author.py's own separate app
+  instance, bound to the loopback address, with no token -- never reachable
+  from the phone surface's route table. No third-party origin is ever
+  loaded here either (gate 6 scans this file): no CDN, no web font, no
+  analytics -- there is no third party in this architecture that has any
+  business seeing this page load.
+-->
+<title>Author</title>
+<link rel="stylesheet" href="/author.css">
+</head>
+<body>
+  <h1>Interview brief, survey &amp; hypotheses</h1>
+  <p class="hint">
+    Write this shortly before the call. Saves to <code>context/brief.json</code>,
+    <code>context/survey.json</code> and <code>context/hypotheses.json</code> on
+    this machine only -- all three are git-ignored and never committed.
+  </p>
+
+  <section id="brief-section">
+    <h2>Brief</h2>
+    <p class="hint">
+      What you know or suspect about the interviewee. Every item needs an
+      explicit evidence/inference choice below -- there is no default, on
+      purpose (CTX-02): a guess must never be presented to the coach as fact.
+    </p>
+    <!-- Filled by /api/state. Empty and hidden unless the file on disk
+         exists and cannot be read -- in which case an empty form below is
+         NOT an un-authored node, and typing into it is wasted work. -->
+    <div id="brief-damage" class="damage" hidden></div>
+    <div id="brief-items"></div>
+    <p>
+      <button type="button" id="add-brief-item">+ Add brief item</button>
+      <button type="button" id="save-brief">Save brief</button>
+      <span id="brief-status" class="status" role="status"></span>
+    </p>
+  </section>
+
+  <section id="survey-section">
+    <h2>Survey</h2>
+    <p class="hint">
+      The ordered list of questions you plan to ask. The coach tracks which
+      ones you actually asked, from your own microphone -- never from a
+      suggestion shown, whether or not you followed it.
+    </p>
+    <!-- Filled by /api/state. Empty and hidden unless the file on disk
+         exists and cannot be read -- in which case an empty form below is
+         NOT an un-authored node, and typing into it is wasted work. -->
+    <div id="survey-damage" class="damage" hidden></div>
+    <div id="survey-items"></div>
+    <p>
+      <button type="button" id="add-survey-item">+ Add survey question</button>
+      <button type="button" id="save-survey">Save survey</button>
+      <span id="survey-status" class="status" role="status"></span>
+    </p>
+  </section>
+
+  <section id="hypotheses-section">
+    <h2>Hypotheses</h2>
+    <p class="hint">
+      What you believe about this customer, stated so it can be proven
+      wrong. Every hypothesis needs an explicit falsification condition --
+      what evidence would make it FALSE -- and this page will not save one
+      without it, on purpose: a hypothesis nobody could ever disprove is not
+      one the coach reading it next can act on.
+    </p>
+    <!-- Filled by /api/state. Empty and hidden unless the file on disk
+         exists and cannot be read -- in which case an empty form below is
+         NOT an un-authored node, and typing into it is wasted work. -->
+    <div id="hypotheses-damage" class="damage" hidden></div>
+    <div id="hypotheses-items"></div>
+    <p>
+      <button type="button" id="add-hypothesis-item">+ Add hypothesis</button>
+      <button type="button" id="save-hypotheses">Save hypotheses</button>
+      <span id="hypotheses-status" class="status" role="status"></span>
+    </p>
+  </section>
+
+  <script src="/author.js"></script>
+</body>
+</html>

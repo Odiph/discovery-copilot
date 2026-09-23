@@ -1,0 +1,14 @@
+{
+  "name": "discovery-copilot-local",
+  "description": "Plugins that let other repositories use this machine's Discovery Copilot interview corpus.",
+  "owner": {
+    "name": "Odiph"
+  },
+  "plugins": [
+    {
+      "name": "discovery",
+      "source": "./discovery",
+      "description": "Ground product decisions in this machine's customer-interview evidence: a read-only MCP server, a skill for reasoning with the evidence, and commands to bind a repository to one project."
+    }
+  ]
+}

@@ -1,0 +1,217 @@
+// Every verb this project has, as a VS Code task. Ctrl+Shift+P -> "Run Task".
+//
+// Every path here is workspace-relative (${workspaceFolder}). Nothing may
+// name a drive letter: this repository is checked out to a different
+// directory on every machine, and a hardcoded path is the exact bug that
+// made open-console.bat work only on its author's laptop.
+//
+// These are "process" tasks, not "shell" tasks, on purpose. A shell task is
+// re-parsed by whatever shell VS Code is configured with, and a quoted
+// interpreter path behaves differently in cmd.exe and PowerShell (PowerShell
+// treats a quoted first word as a string literal, not a command). A process
+// task hands argv straight to CreateProcess and has no such ambiguity.
+{
+  "version": "2.0.0",
+  "options": {
+    "cwd": "${workspaceFolder}",
+    "env": {
+      // The transcript is bilingual Hebrew/English. Without these two the
+      // Windows console encodes stdout as cp1255/cp437 and a Hebrew line
+      // raises UnicodeEncodeError mid-interview.
+      "PYTHONIOENCODING": "utf-8",
+      "PYTHONUTF8": "1"
+    }
+  },
+  "inputs": [
+    {
+      "id": "sessionId",
+      "type": "promptString",
+      "description": "Session id (a directory name under sessions/) or a full path to a session directory"
+    }
+  ],
+  "tasks": [
+    {
+      "label": "Setup: create venv and install",
+      "detail": "RUN THIS FIRST, on a fresh clone. Creates .venv with the Python launcher, then installs requirements.txt into it. Nothing else in this file works until this has succeeded -- every other task runs .venv/Scripts/python.exe, and no repair command could ever create the venv it would itself need to run.",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Setup: create venv",
+        "Setup: install requirements"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Setup: create venv",
+      "detail": "Creates .venv in the workspace root using the Windows Python launcher (py -3).",
+      "type": "process",
+      "command": "py",
+      "args": [
+        "-3",
+        "-m",
+        "venv",
+        ".venv"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Setup: install requirements",
+      "detail": "Installs requirements.txt into .venv. Needs .venv to exist already.",
+      "type": "process",
+      "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "args": [
+        "-m",
+        "pip",
+        "install",
+        "-r",
+        "requirements.txt"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Overlay (floating recorder)",
+      "detail": "Opens the translucent always-on-top overlay: pick a project, record an interview. STOP IT WITH Ctrl+C IN THE TERMINAL -- never VS Code's terminate/trash-can button. That button is TerminateProcess: the process dies where it stands, session.json never gets its closed_at, and the transcript keeps whatever partial tail was mid-write. app/interrupt.py and app/overlay/session.py exist entirely to make the Ctrl+C path close the session cleanly; the trash can bypasses both.",
+      "type": "process",
+      "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "args": [
+        "-u",
+        "-m",
+        "app",
+        "overlay"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Console (pick a project, start an interview)",
+      "detail": "Opens the loopback-only console page: project tree, survey, hypotheses, fact count, past interviews. The console and the interview are ONE process -- leave this terminal open and read it after pressing Start. Stop with Ctrl+C in the terminal, never the trash-can button.",
+      "type": "process",
+      "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "args": [
+        "-u",
+        "-m",
+        "app",
+        "console"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start an interview (no overlay, no console)",
+      "detail": "Captures and transcribes both sides directly. STOP IT WITH Ctrl+C IN THE TERMINAL -- never VS Code's terminate/trash-can button, which is TerminateProcess and abandons the session instead of closing it (no closed_at, truncated transcript). Answer N to 'Terminate batch job?' if cmd.exe asks.",
+      "type": "process",
+      "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "args": [
+        "-u",
+        "-m",
+        "app",
+        "start"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Precheck (go/no-go before a call)",
+      "detail": "One PASS/FAIL row per check: both devices resolve, both streams carry real audio, the STT engine answers. Play the call app's test audio and speak into the mic while it runs. Add --phone by hand before a real call.",
+      "type": "process",
+      "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "args": [
+        "-u",
+        "-m",
+        "app",
+        "precheck"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Author (brief, survey, hypotheses)",
+      "detail": "Opens the loopback-only authoring page. Writes context/brief.json, context/survey.json and context/hypotheses.json -- all gitignored, all naming a real customer.",
+      "type": "process",
+      "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "args": [
+        "-u",
+        "-m",
+        "app",
+        "author"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Hub (review a finished interview)",
+      "detail": "Where each hypothesis stands after an interview: the evidence for it, against it, and the transcript.",
+      "type": "process",
+      "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "args": [
+        "-u",
+        "-m",
+        "app",
+        "hub"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Extract facts from a session",
+      "detail": "Extracts cited, provenance-tagged facts from a finished session into the fact corpus. Prompts for the session id. Makes a paid call to the reasoning vendor.",
+      "type": "process",
+      "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "args": [
+        "-u",
+        "-m",
+        "app",
+        "extract",
+        "${input:sessionId}"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Render a session transcript",
+      "detail": "Renders a recorded session into a readable transcript document. Prompts for the session id.",
+      "type": "process",
+      "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "args": [
+        "-u",
+        "-m",
+        "app",
+        "render",
+        "${input:sessionId}"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Tests (offline)",
+      "detail": "The whole suite with every marker that costs money or needs real audio hardware deselected: no network, no microphone, no paid reasoning call.",
+      "type": "process",
+      "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "args": [
+        "-m",
+        "pytest",
+        "app/tests",
+        "benchmark/tests",
+        "-q",
+        "-m",
+        "not live and not hardware and not live_reasoning"
+      ],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}

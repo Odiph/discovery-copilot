@@ -1,0 +1,138 @@
+/* app/static/author/author.css -- deliberately plain and fast to use under
+   time pressure (04-03-PLAN.md §E4): this gets filled in shortly before a
+   call, and a fussy editor is one the user will skip. No CDN, no web font. */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #0b0d12;
+  color: #eaeaea;
+}
+
+body {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px 20px 48px;
+}
+
+h1 {
+  font-size: 1.4rem;
+  margin: 0 0 4px 0;
+}
+
+h2 {
+  font-size: 1.1rem;
+  margin: 24px 0 4px 0;
+  border-bottom: 1px solid #2a2e37;
+  padding-bottom: 4px;
+}
+
+.hint {
+  color: #9099a8;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+code {
+  background: #12151c;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+.item-row {
+  border: 1px solid #2a2e37;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin: 0 0 10px 0;
+  background: #12151c;
+}
+
+.field {
+  display: block;
+  font-size: 0.8rem;
+  color: #9099a8;
+  margin: 0 0 8px 0;
+}
+
+.field input,
+.field textarea,
+.field select {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 2px;
+  padding: 6px 8px;
+  background: #0b0d12;
+  color: #eaeaea;
+  border: 1px solid #2a2e37;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+.field textarea {
+  min-height: 3.5em;
+  resize: vertical;
+}
+
+.provenance-group {
+  display: flex;
+  gap: 16px;
+  margin: 6px 0 10px 0;
+  font-size: 0.85rem;
+}
+
+.provenance-option {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+button {
+  background: #1c2128;
+  color: #eaeaea;
+  border: 1px solid #2a2e37;
+  border-radius: 4px;
+  padding: 6px 10px;
+  margin-right: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+button:hover:not(:disabled) {
+  background: #262c35;
+}
+
+.status {
+  font-size: 0.85rem;
+  color: #9099a8;
+}
+
+/* The damaged-file banner. Red, not amber: unlike the hub's un-extracted
+   notice this is not an unfinished step, it is a file that will refuse to be
+   overwritten, and the form beneath it is actively misleading until it is
+   dealt with. Left border rather than a fill, matching the hub's convention.
+
+   `user-select: all` on the path for the same reason the hub's remedy line
+   has it -- it is meant to be copied into a terminal. */
+.damage {
+  border-left: 4px solid #c2413f;
+  background: rgba(194, 65, 63, 0.06);
+  padding: 0.7rem 0.9rem;
+  margin: 0 0 1rem;
+  border-radius: 3px;
+}
+.damage-headline { font-size: 0.95rem; }
+.damage-path {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.85rem;
+  margin-top: 0.45rem;
+  opacity: 0.85;
+  user-select: all;
+}

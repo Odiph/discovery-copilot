@@ -1,0 +1,79 @@
+.planning/research/.cache/
+__pycache__/
+*.pyc
+.venv/
+venv/
+# `.env*`, not `.env`. The exact name ignored the one file anybody thinks to
+# create and left every neighbour committable -- `.env.bak`, `.env.local`,
+# `.env.backup`, and the `.env.env.bak` an editing script actually produced on
+# 2026-08-14, which held three live credentials and showed up in `git status`
+# as an untracked file one `git add -A` away from the history. The example file
+# is re-admitted below, because it is a shipped format sample and must stay
+# visible for the same reason `context/*.example.json` does.
+.env*
+!.env.example
+*.wav
+*.mp3
+*.m4a
+sessions/
+
+# STT benchmark harness (Phase 1) — real audio, human transcripts and per-error
+# detail must never reach git. See benchmark/README.md.
+benchmark/data/
+
+# Phase 4 (04-01-PLAN.md §C8) — context/brief.json names a real customer,
+# labelled evidence vs. inference; context/survey.json is what the user plans
+# to ask them. The most sensitive plaintext this repository has ever
+# produced. Only the *.example.json format samples (synthetic content) ship.
+#
+# Phase 5 (05-01-PLAN.md §K1) — context/facts.json (claims extracted from a
+# real interview, carrying verbatim quoted speech) and context/hypotheses.json
+# (user-authored) are covered by the SAME rule below; no new rule is needed.
+# Before moving either file out of context/, read this: that edit is exactly
+# how customer speech would leak into git.
+context/*
+!context/*.example.json
+
+# Phase A -- the project tree. Verified with real `git check-ignore` BEFORE
+# any code wrote here: `projects/<n>/sessions/` was already covered, because
+# the `sessions/` rule above is unanchored and matches at any depth. But
+# `projects/<n>/context/` was NOT -- `context/*` is root-anchored and does
+# not follow. Briefs, surveys, hypotheses and extracted facts under
+# `projects/` were committable.
+#
+# BLANKET, and it must stay blanket. The tempting shape is `projects/*` plus
+# `!projects/*/context/*.example.json` to keep shipping format samples from
+# inside the tree; it CANNOT work. Git does not descend into an excluded
+# directory, so a negation below it is never consulted. The format samples
+# stay where they are, in the root `context/`, which is why this rule can
+# afford to be total. Gate 29 asserts it over concrete artifact paths.
+projects/
+
+# The coach eval's GENERATED artifacts (benchmark/eval/). The interview script
+# is source and ships; everything below is rebuilt from it by `build_audio.py`
+# in about two minutes, and the audio alone is ~145 MB. `*.wav` above already
+# covers the audio at any depth -- these are the rest.
+#
+# `claudictive_truth.json` is derived, not authored: it is the script plus the
+# timings SAPI happened to produce on one machine, so committing it would
+# invite a later reader to trust it as a reference when the voices, the rate or
+# the gap constants have since changed.
+benchmark/eval/turns/
+benchmark/eval/turns.json
+benchmark/eval/claudictive_truth.json
+benchmark/eval/*.log
+
+# Full-screen captures from the `snap` skill. These are photographs of the
+# operator's whole desktop -- other windows, file names, whatever else was
+# open -- taken to check how the overlay renders. Never committable.
+Screenshots/
+
+# Model-replay outputs (benchmark/eval/model_replay.py). These carry
+# `trigger_text` -- the interviewee's own words, lifted verbatim out of a
+# recorded transcript -- alongside the questions each model produced. The
+# transcript they come from is already ignored under the project tree, and a
+# replay of it must not be the hole that walks the same speech back into the
+# repository under a different name.
+benchmark/eval/replay_*.jsonl
+benchmark/eval/replay_*.summary.json
+benchmark/eval/replay_*.log

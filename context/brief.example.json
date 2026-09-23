@@ -1,0 +1,16 @@
+[
+  {
+    "id": "b1",
+    "text": "The team currently onboards a new customer in about three weeks, mostly by email.",
+    "source": "discovery call notes, example",
+    "citation": "notes.md#L14",
+    "provenance": "evidence"
+  },
+  {
+    "id": "b2",
+    "text": "Probably sensitive to onboarding delays given their team size, but this is unconfirmed.",
+    "source": "analyst inference, example",
+    "citation": null,
+    "provenance": "inference"
+  }
+]

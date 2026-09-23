@@ -1,0 +1,8 @@
+{
+  "name": "discovery",
+  "version": "0.1.0",
+  "description": "Ground product decisions in this machine's customer-interview evidence. Read-only: claims and hypothesis standings, never quotes, transcripts or audio.",
+  "author": {
+    "name": "Odiph"
+  }
+}

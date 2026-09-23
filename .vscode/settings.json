@@ -1,0 +1,70 @@
+// Three concerns only: which interpreter, which tests, and what the editor is
+// forbidden to read.
+{
+  // ---------------------------------------------------------------------
+  // 1. The interpreter. Workspace-relative, never a drive letter -- this
+  //    repository lives at a different path on every machine. Create it with
+  //    the "Setup: create venv and install" task.
+  // ---------------------------------------------------------------------
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+
+  // ---------------------------------------------------------------------
+  // 2. Tests. The marker filter is a SPEND AND HARDWARE GUARD, not tidiness:
+  //    `live_reasoning` makes a real, paid call to the reasoning vendor, and
+  //    `live` needs a funded STT key. Without this filter, one careless click
+  //    of "Run All Tests" in the Test Explorer bills the user. `hardware`
+  //    needs a real unmuted audio device and fails noisily without one.
+  //    Run those deliberately from a terminal, never from the sidebar.
+  // ---------------------------------------------------------------------
+  "python.testing.pytestEnabled": true,
+  "python.testing.pytestArgs": [
+    "app/tests",
+    "benchmark/tests",
+    "-m",
+    "not live and not hardware and not live_reasoning"
+  ],
+
+  // ---------------------------------------------------------------------
+  // 3. PRIVACY, not convenience.
+  //
+  //    `sessions/` and `projects/` hold VERBATIM CUSTOMER SPEECH -- live
+  //    transcripts, extracted facts quoting a named real person, briefs and
+  //    surveys about them. They are gitignored for exactly that reason.
+  //
+  //    But gitignore only stops git. VS Code's search index reads the whole
+  //    workspace, and so does every Copilot-class extension that grounds
+  //    itself in "workspace context" -- which is how that speech would leave
+  //    this machine without anyone committing anything. Excluding these
+  //    directories from search and from the file watcher keeps them out of
+  //    the index that those extensions read.
+  //
+  //    Do not narrow these globs. `projects/**` must stay recursive: each
+  //    project node nests its own context/ and sessions/ underneath it.
+  //
+  //    The root `context/` directory is named ARTIFACT BY ARTIFACT rather
+  //    than as `context/**`, and that is deliberate. It holds the most
+  //    sensitive plaintext this repository produces -- an authored brief can
+  //    name a real customer, and facts.json carries extracted claims -- but
+  //    it ALSO holds the committed `*.example.json` format samples, which are
+  //    the only documentation of these file shapes. `search.exclude` has no
+  //    negation, so `context/**` would hide the examples along with the real
+  //    files. Naming the four real artifacts keeps the examples findable and
+  //    the customer speech out of the index.
+  // ---------------------------------------------------------------------
+  "search.exclude": {
+    "projects/**": true,
+    "sessions/**": true,
+    "**/sessions/**": true,
+    "**/context/brief.json": true,
+    "**/context/survey.json": true,
+    "**/context/hypotheses.json": true,
+    "**/context/facts.json": true,
+    "**/.venv/**": true
+  },
+  "files.watcherExclude": {
+    "projects/**": true,
+    "sessions/**": true,
+    "**/sessions/**": true,
+    "**/.venv/**": true
+  }
+}

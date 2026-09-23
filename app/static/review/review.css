@@ -1,0 +1,341 @@
+/* Read at a desk after a call, not glanced at during one -- so this is the
+   opposite of the overlay: comfortable measure, generous spacing, no
+   contrast tricks. */
+/* Two sets, because ONE set cannot work. This page declares `color-scheme:
+   light dark` and sets no background of its own, so it renders on the UA's
+   Canvas: white in light, about #121212 in dark. A single foreground would
+   have to clear 4.5:1 against both, which needs relative luminance <= 0.183
+   for white and >= 0.202 for #121212. There is no such colour. Every value
+   here was previously tuned against white alone and every one of the three
+   failed in dark: --dim 3.42:1 on white, --supports 3.65:1 and --contrary
+   2.87:1 on the dark canvas. The dark red was the worst of them and is the
+   one carrying "this evidence undermines the hypothesis". */
+:root { color-scheme: light dark; --supports: #2e7d32; --contrary: #b3261e; --dim: #71717a; }
+@media (prefers-color-scheme: dark) {
+  :root { --supports: #66bb6a; --contrary: #e57373; --dim: #8a8a93; }
+}
+
+body {
+  margin: 0 auto; padding: 2rem 1.5rem; max-width: 54rem;
+  font-family: system-ui, sans-serif; line-height: 1.55;
+}
+h1 { font-size: 1.5rem; margin: 0 0 0.2rem; }
+h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em;
+     opacity: 0.6; margin: 2.5rem 0 0.75rem; }
+h3 { font-size: 1.05rem; margin: 0 0 0.5rem; }
+.sub { margin: 0; color: var(--dim); }
+.note { color: var(--dim); font-size: 0.9rem; }
+.error { color: var(--contrary); }
+
+/* Writing a decision rule. Deliberately plain: this is a form on a reading
+   page, and it must not compete with the evidence it sits under. */
+.criterion-editor { margin: 0.6rem 0 0.2rem; }
+.criterion-editor input, .new-hypothesis input {
+  font: inherit; width: 100%; box-sizing: border-box; padding: 0.35rem 0.5rem;
+  margin: 0.2rem 0 0.5rem; border-radius: 4px;
+  border: 1px solid rgba(127,127,127,0.45); background: transparent; color: inherit;
+}
+.criterion-editor button, .new-hypothesis button {
+  font: inherit; font-size: 0.9rem; padding: 0.3rem 0.8rem; border-radius: 4px;
+  border: 1px solid rgba(127,127,127,0.5); background: transparent; color: inherit;
+  cursor: pointer;
+}
+.new-hypothesis label { display: block; font-size: 0.8rem; text-transform: uppercase;
+                        letter-spacing: 0.06em; opacity: 0.6; margin-top: 0.6rem; }
+.save-banner { margin: 0.6rem 0 0; font-size: 0.9rem; color: var(--supports); }
+.save-status { font-size: 0.9rem; margin-left: 0.6rem; }
+.save-status.saved { color: var(--supports); }
+.save-status.failed { color: var(--contrary); }
+
+/* Survey coverage. Asked and unasked are set apart by weight rather than by
+   colour: "not asked" is not an error, it is the next interview's agenda. */
+.questions { margin: 0.3rem 0 1rem; padding-left: 1.2rem; }
+.questions li { margin: 0.15rem 0; }
+.questions.asked li { opacity: 0.65; }
+.flag { font-size: 0.9rem; color: var(--contrary); margin: 0.4rem 0; }
+
+/* Who was interviewed. Sits in the header with the picker, because it is part
+   of identifying the call rather than a finding about it.
+
+   The empty state is styled DIMMER, never redder. Almost every interview on
+   disk has no label and never will have one, so this box renders its empty
+   state most times the page is opened; colouring the ordinary case like an
+   error would train the operator to ignore the one colour this page reserves
+   for things that are actually wrong. */
+.participant { margin: 0.9rem 0 0; display: flex; align-items: baseline;
+               gap: 0.5rem; flex-wrap: wrap; }
+.participant .participant-name { margin: 0; flex-basis: 100%; font-size: 0.95rem; }
+.participant .participant-name.empty { color: var(--dim); }
+.participant .note { margin: 0; flex-basis: 100%; }
+.participant input {
+  font: inherit; font-size: 0.95rem; flex: 1 1 18rem; box-sizing: border-box;
+  padding: 0.25rem 0.5rem; border-radius: 4px;
+  border: 1px solid rgba(127,127,127,0.45); background: transparent; color: inherit;
+}
+.participant button {
+  font: inherit; font-size: 0.9rem; padding: 0.3rem 0.8rem; border-radius: 4px;
+  border: 1px solid rgba(127,127,127,0.5); background: transparent; color: inherit;
+  cursor: pointer;
+}
+.participant .save-status { margin-left: 0; }
+
+/* The interview picker. Sits in the header because the project is the page's
+   scope and the interview is the one thing about it you change. */
+.picker-row { display: flex; align-items: baseline; gap: 0.6rem;
+              flex-wrap: wrap; margin: 0.9rem 0 0; }
+.picker-row label { font-size: 0.8rem; text-transform: uppercase;
+                    letter-spacing: 0.06em; opacity: 0.6; }
+.picker-row select { font: inherit; font-size: 0.95rem; padding: 0.25rem 0.4rem;
+                     border-radius: 4px; border: 1px solid rgba(127,127,127,0.45);
+                     background: transparent; color: inherit; max-width: 100%; }
+
+.card { border: 1px solid rgba(127,127,127,0.28); border-radius: 6px;
+        padding: 1rem 1.1rem; margin-bottom: 1rem; }
+.card.touched { border-color: rgba(127,127,127,0.6); }
+/* Moved, not merely touched: the only cards that changed a belief today. */
+.card.moved { border-left: 4px solid rgba(127,127,127,0.75); }
+
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.6rem; }
+.badge { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em;
+         padding: 0.15rem 0.5rem; border-radius: 3px; background: rgba(127,127,127,0.18); }
+.badge.moved { background: rgba(127,127,127,0.38); font-weight: 600; }
+.badge.unscorable { color: var(--contrary); }
+
+/* The delta is the sentence this page exists for, so it is set at reading
+   size rather than as another dim badge. */
+.delta { font-size: 0.95rem; margin: 0 0 0.5rem; }
+.falsifier { font-size: 0.85rem; margin: 0 0 0.9rem; opacity: 0.75; }
+
+.criterion { font-size: 0.9rem; margin: 0 0 0.9rem; padding-left: 0.7rem;
+             border-left: 2px solid rgba(127,127,127,0.4); }
+.criterion.missing { color: var(--contrary); border-left-color: var(--contrary); }
+
+/* Both columns always render, equal width. A supporting-only view is the
+   monotonic count the stance field was introduced to kill. */
+.ledger { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 40rem) { .ledger { grid-template-columns: 1fr; } }
+.column h4 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;
+             margin: 0 0 0.4rem; }
+.column.for h4 { color: var(--supports); }
+.column.against h4 { color: var(--contrary); }
+
+.fact { font-size: 0.9rem; margin-bottom: 0.7rem; }
+.fact.new { font-weight: 600; }
+.fact .quote { display: block; font-style: italic; opacity: 0.75; font-size: 0.85rem; }
+.fact .cite { font-size: 0.72rem; opacity: 0.55; }
+/* A citation into this interview is a link onto the turn it came from --
+   evidence buried one click too deep is the loudest complaint users report
+   about screens like this one. */
+a.cite { display: inline-block; color: inherit; }
+a.cite:hover { opacity: 0.9; }
+.empty { font-size: 0.85rem; opacity: 0.6; }
+
+/* The unclear column is drawn even when empty, like the other two. */
+.column.unclear h4 { color: var(--dim); }
+
+/* The only card on this page that changes anything, so it is the only one
+   with a marked edge -- the affordance says "this acts", not "this reports". */
+.card.proposal { border-color: rgba(127,127,127,0.6); border-left-width: 4px; }
+/* "You already declined this." Drawn as a NOTE, not as a warning: the reader
+   is not being told they made a mistake, they are being handed back their own
+   earlier judgement and the date of it. Neutral grey for the same reason the
+   talk-share bars are neutral -- a coloured alarm would be a claim this page
+   has no basis for, and the proposal is genuinely still open. */
+.declined-before { border-left: 3px solid rgba(127,127,127,0.5);
+                   background: rgba(127,127,127,0.06); border-radius: 3px;
+                   padding: 0.55rem 0.8rem; margin: 0 0 0.8rem; }
+.declined-before p { margin: 0 0 0.25rem; font-size: 0.85rem; }
+.declined-before p:last-child { margin-bottom: 0; }
+.declined-headline { font-weight: 600; }
+.declined-when, .declined-where { font-variant-numeric: tabular-nums; opacity: 0.8; }
+.declined-note { opacity: 0.6; }
+.badge.declined { background: rgba(127,127,127,0.38); }
+.asked h4 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;
+            margin: 0 0 0.4rem; opacity: 0.6; }
+.asked .quote { font-style: italic; opacity: 0.75; font-size: 0.85rem; margin: 0 0 0.4rem; }
+.actions { display: flex; gap: 0.6rem; margin-top: 1rem; }
+.actions button { font: inherit; font-size: 0.9rem; padding: 0.35rem 1.1rem;
+                  border-radius: 4px; cursor: pointer;
+                  border: 1px solid rgba(127,127,127,0.5); background: transparent;
+                  color: inherit; }
+/* Accept and Reject are the same weight on purpose. Making accept the loud
+   default is how a proposal becomes a rubber stamp. */
+.actions button:disabled { opacity: 0.45; cursor: default; }
+.decision-status { font-size: 0.85rem; margin: 0.6rem 0 0; opacity: 0.8; }
+
+/* Who did the talking. Bars are NEUTRAL, and the interviewer's own row is set
+   apart by opacity rather than by hue.
+
+   No threshold has ever been measured for this product, so there is no honest
+   basis for a red band at 60% or a green one at 40%. A progress bar that turns
+   red is a claim; this one is only a comparison. The interviewer's row is
+   emphasised because it is the row they came to read, not because it is bad --
+   the same reason the participant box is dimmer and never redder. */
+.share-row { display: flex; align-items: center; gap: 0.6rem; margin: 0.35rem 0; }
+.share-who { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;
+             opacity: 0.5; flex: 0 0 4.5rem; }
+.share-track { flex: 1 1 auto; height: 0.55rem; border-radius: 3px;
+               background: rgba(127,127,127,0.18); overflow: hidden; }
+.share-fill { height: 100%; background: rgba(127,127,127,0.55); }
+.share-fill.mine { background: rgba(127,127,127,0.85); }
+.share-value { font-size: 0.85rem; color: var(--dim); flex: 0 0 9rem;
+               text-align: right; font-variant-numeric: tabular-nums; }
+
+/* The interview in numbers. Quieter than a card and louder than a note: it is
+   a summary of what is already on the page, so it must be readable at a glance
+   without competing with the standings the reader came for. */
+.summary-headline { font-size: 1.05rem; }
+.summary-split, .summary-projects { font-size: 0.85rem; opacity: 0.7; margin-top: 0.3rem; }
+
+.turn { margin-bottom: 0.5rem; font-size: 0.95rem; }
+.turn .who { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;
+             opacity: 0.5; margin-right: 0.5rem; }
+/* Where a followed citation lands. Marked with a fill AND a left edge: the
+   whole cited span is lit, and the reader must be able to see where it ends. */
+.turn.hit { background: rgba(208,139,40,0.18); border-left: 3px solid #d08b28;
+            padding: 0.1rem 0.4rem; margin-left: -0.4rem; border-radius: 2px; }
+
+/* The extraction banner. Louder than a note and quieter than an error,
+   because "this page does not know yet" is neither a finding nor a fault.
+   Colour is carried on a left edge rather than a fill: the standings below
+   already use fills, and a second filled block would compete with the thing
+   the reader came for. */
+.extraction { border-left: 4px solid rgba(127,127,127,0.5); padding: 0.7rem 0.9rem;
+              margin: 0 0 1.4rem; border-radius: 3px;
+              background: rgba(127,127,127,0.06); }
+.extraction-headline { font-size: 0.95rem; }
+.extraction-counts { font-size: 0.8rem; opacity: 0.6; margin-top: 0.35rem; }
+/* The remedy is monospace because it is meant to be typed, not read. Nothing
+   in `run_hub` mentions extraction, so a reader has no way to know the step
+   exists unless the page says the command. */
+.extraction-remedy { font-family: ui-monospace, Consolas, monospace; font-size: 0.85rem;
+                     margin-top: 0.45rem; opacity: 0.85; user-select: all; }
+/* Amber, never red: an un-extracted interview is an unfinished step, not a
+   failure, and red on this page means a hypothesis was contradicted. */
+/* Amber is "an unfinished step", red is "unreadable". All three of these are
+   unfinished steps, not faults. */
+.extraction.not-extracted,
+.extraction.no-facts-from-this-interview,
+.extraction.no-hypotheses { border-left-color: #d08b28; }
+.extraction.unreadable { border-left-color: #c2413f; }
+.extraction.extracted { border-left-color: rgba(127,127,127,0.5); }
+
+/* --- the graphical standing (direction D) -------------------------------------------
+   Built on this file's OWN --supports / --contrary / --dim, which are already
+   tuned for both canvases (see the contrast note at the top). A second
+   diverging pair introduced here would need that work redone to land somewhere
+   equivalent, and would leave two pairs to keep in agreement. */
+
+.standing-bar { margin: 0.5rem 0 0.6rem; }
+
+.standing-track {
+  display: flex;
+  height: 14px;
+  border-radius: 4px;
+  overflow: hidden;
+  /* A 2px gap between adjacent fills, drawn in the page's own background so
+     two segments never read as one longer one. */
+  gap: 2px;
+}
+.standing-seg { height: 100%; border-radius: 3px; min-width: 3px; }
+.standing-seg.for { background: var(--supports); }
+.standing-seg.against { background: var(--contrary); }
+/* Unresolved is deliberately the flattest thing on the bar. It is real and it
+   is drawn -- a claim that could not be directed vanishing without trace is
+   the same failure as a missing contrary column -- but it must not read as a
+   third opinion competing with the two that point somewhere. */
+.standing-seg.unclear { background: var(--dim); opacity: 0.55; }
+
+.standing-key {
+  display: flex; flex-wrap: wrap; gap: 0.15rem 0.9rem;
+  font-size: 0.8rem; margin-top: 0.35rem;
+}
+/* Identity never rests on colour alone: every key carries its own count and a
+   word, so the bar is legible in greyscale and to a screen reader. */
+.standing-key .k::before {
+  content: ""; display: inline-block; width: 8px; height: 8px;
+  border-radius: 2px; margin-right: 0.35rem; vertical-align: baseline;
+}
+.standing-key .k.for::before { background: var(--supports); }
+.standing-key .k.against::before { background: var(--contrary); }
+.standing-key .k.unclear::before { background: var(--dim); opacity: 0.55; }
+.standing-key .k.for { color: var(--supports); }
+.standing-key .k.against { color: var(--contrary); }
+.standing-key .k.unclear, .standing-key .k.dim { color: var(--dim); }
+.standing-key .k.dim::before { content: none; }
+
+/* The criterion meter. The threshold marker is the point of it -- without one
+   this is progress toward a sample size, which is a much less interesting
+   fact than progress toward the rule. */
+.criterion-meter { margin: 0.1rem 0 0.6rem; }
+.meter-track {
+  position: relative;
+  height: 14px;
+  border-radius: 4px;
+  background: rgba(127,127,127,0.22);
+}
+.meter-fill {
+  height: 100%; border-radius: 4px;
+  background: var(--dim);
+}
+.criterion-meter.met .meter-fill { background: var(--supports); }
+.meter-threshold {
+  position: absolute; top: -4px; bottom: -4px; width: 2px;
+  background: currentColor;
+  /* Sits ON the coordinate it marks rather than beside it. */
+  transform: translateX(-1px);
+}
+.meter-read { font-size: 0.85rem; margin: 0.35rem 0 0; }
+.criterion-meter.met .meter-read { color: var(--supports); }
+
+/* --- the debrief panels (direction D) -------------------------------------------------
+   Three panels inside "This interview in numbers": how the interviewer's own
+   questions banded, what extraction refused, and evidence against inference.
+
+   Same palette rule as the standing bar above -- this file's own --supports /
+   --contrary / --dim, already tuned for both canvases at the top -- and the
+   same row geometry as the talk-share meter, so a reader who has learnt to
+   read one bar on this page can read all of them. */
+
+.panel-heading { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em;
+                 opacity: 0.6; margin: 1.6rem 0 0.5rem; }
+
+.panel-row { display: flex; align-items: center; gap: 0.6rem; margin: 0.3rem 0; }
+/* A wider label column than the talk-share meter's, because these labels are
+   rule names ("Confirmation-only", "unlocatable-quote") rather than speakers. */
+.panel-who { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;
+             opacity: 0.55; flex: 0 0 9rem; }
+.panel-track { flex: 1 1 auto; height: 0.55rem; border-radius: 3px;
+               background: rgba(127,127,127,0.18); display: flex; gap: 2px;
+               overflow: hidden; }
+.panel-track.wide { height: 0.85rem; border-radius: 4px; }
+/* A drawn fill is never hairline-invisible, but an ABSENT one is not drawn at
+   all -- the client omits the node rather than setting a zero width, because a
+   zero-width fill inside a track reads as "measured, and it came to nothing". */
+.panel-fill, .panel-seg { height: 100%; border-radius: 3px; min-width: 2px; }
+.panel-value { font-size: 0.85rem; color: var(--dim); flex: 0 0 13rem;
+               text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Clean rates are green because a clean question genuinely is the good
+   outcome and the rubric is the pre-registered rule it is judged against --
+   unlike talk share, which has no measured threshold to colour toward. */
+.panel-fill.clean { background: var(--supports); }
+/* A broken rule is the contrary colour; this page already reserves red for
+   "this counts against you" and a flag count is exactly that. */
+.panel-fill.flag { background: var(--contrary); }
+/* A refusal is neither. Extraction throwing a claim away is the pipeline
+   working, not a finding against the interview, so the reasons are drawn flat
+   in the neutral tone the unresolved column already uses. */
+.panel-fill.reason { background: var(--dim); }
+
+/* Evidence against inference, drawn NEUTRALLY on purpose. Nothing in this
+   product has established a healthy ratio, and the design note is blunter
+   still: extraction verifies a quote is verbatim and never that the claim
+   follows from it, so a green "evidence" segment would grade a number that is
+   only an upper bound. Separated by weight, and by the words beside them. */
+.provenance-bar { margin: 0.5rem 0 0.2rem; }
+.panel-seg.evidence { background: var(--dim); }
+.panel-seg.inference { background: var(--dim); opacity: 0.45; }
+/* The one coloured segment: a provenance this page has never heard of really
+   is a fault, and it is already named in words above the bar. */
+.panel-seg.unknown { background: var(--contrary); }
