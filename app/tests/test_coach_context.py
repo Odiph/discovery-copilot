@@ -511,6 +511,7 @@ def test_warn_if_context_stale_is_silent_when_the_context_is_newer_than_the_prev
     assert captured.err == ""
 
 
+@pytest.mark.audio_device
 def test_start_proceeds_with_coach_disabled_and_a_printed_explanation_when_the_key_is_absent(tmp_path):
     env = dict(os.environ)
     # Set it EMPTY rather than popping it. The subprocess runs with cwd=REPO_ROOT,

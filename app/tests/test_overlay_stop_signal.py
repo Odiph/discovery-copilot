@@ -152,6 +152,7 @@ def _free_port() -> int:
 
 
 @pytest.mark.skipif(os.name != "nt", reason="CTRL_BREAK_EVENT is Windows-only")
+@pytest.mark.audio_device
 def test_a_real_interview_with_the_server_running_still_writes_closed_at(tmp_path):
     """THE test this file was missing, and the reason `closed_at` was still
     absent from every overlay recording after `7fcfe05`.

@@ -348,6 +348,7 @@ def _free_port() -> int:
 
 
 @pytest.mark.skipif(os.name != "nt", reason="CTRL_BREAK_EVENT is Windows-only")
+@pytest.mark.audio_device
 def test_a_real_interview_records_the_toggle_and_still_closes_cleanly(tmp_path):
     """THE crossing test. Everything above proves the overlay SENDS a line and
     the child's parser UNDERSTANDS one; neither proves a running interview does
@@ -567,6 +568,7 @@ def test_the_reported_line_comes_from_the_tracker_not_from_the_request():
 
 
 @pytest.mark.skipif(os.name != "nt", reason="CTRL_BREAK_EVENT is Windows-only")
+@pytest.mark.audio_device
 def test_a_one_sided_run_can_take_a_microphone_mid_interview(tmp_path):
     """The path the operator actually hit, and it did nothing.
 

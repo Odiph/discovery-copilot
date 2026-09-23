@@ -126,6 +126,7 @@ def _run_start_in_background(args, monkeypatch, sessions_root: Path, engine: str
     return thread, result_holder
 
 
+@pytest.mark.audio_device
 def test_offline_end_to_end_writes_segments_while_running(tmp_path, monkeypatch):
     args = app_main.build_arg_parser().parse_args(["start", "--seconds", "3"])
     thread, result_holder = _run_start_in_background(args, monkeypatch, tmp_path, "fake")

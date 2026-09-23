@@ -305,6 +305,7 @@ def test_both_coach_threads_are_constructed_only_under_the_coach_enabled_flag():
 
 
 @pytest.mark.parametrize("flagged", [True, False])
+@pytest.mark.audio_device
 def test_a_coachless_run_loads_no_context_and_starts_no_coach_thread(tmp_path, flagged):
     # Driven with a REAL-shaped key and a VALID context dir on purpose: the
     # degrade path already covered by test_coach_context.py is "no key", and a
@@ -356,6 +357,7 @@ def test_a_coachless_run_loads_no_context_and_starts_no_coach_thread(tmp_path, f
     assert "coaching_latency_summary" not in metadata
 
 
+@pytest.mark.audio_device
 def test_the_no_coach_notice_is_distinguishable_from_the_missing_key_degrade(tmp_path):
     # An existing test greps stdout for "Coach disabled" to prove the no-key
     # degrade path ran. If `--no-coach` printed the same words, that test would

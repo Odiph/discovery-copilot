@@ -47,6 +47,10 @@ A test that WANTS the OpenAI-compatible seam sets these itself with
 
 from __future__ import annotations
 
+import subprocess
+import sys
+from functools import lru_cache
+
 import pytest
 
 # Every environment variable that can route `reasoning_client.build_client()`
@@ -64,3 +68,53 @@ def _no_ambient_coach_seam(monkeypatch):
     the set that does not need it."""
     for name in _SEAM_VARIABLES:
         monkeypatch.setenv(name, "")
+
+
+# --- `audio_device`: run where a real device exists, skip where none does ------------
+#
+# Some tests launch a real `python -m app start` child with the fake STT engine.
+# The ENGINE is fake; the capture is not -- the child still opens the default
+# WASAPI loopback and input devices, and exits with "No WASAPI loopback device
+# is available" on a machine that has none, such as a CI runner. Marking them
+# `hardware` would deselect them from the everyday offline run on a developer's
+# own machine, where they are some of the most valuable tests in the suite, so
+# they skip only where the devices are genuinely absent.
+#
+# The probe runs in a SEPARATE process and exits before any test starts: two
+# live PyAudio instances on one machine are an uncatchable access violation,
+# so this process never holds one.
+
+_AUDIO_PROBE = """
+import pyaudiowpatch as p
+from app.capture import devices as d
+pa = p.PyAudio()
+try:
+    d.resolve_default_loopback_device(pa)
+    d.resolve_default_input_device(pa)
+finally:
+    pa.terminate()
+"""
+
+
+@lru_cache(maxsize=1)
+def _audio_devices_missing() -> "str | None":
+    """None when a default loopback and input device both resolve; otherwise
+    the reason, for the skip message."""
+    try:
+        result = subprocess.run(
+            [sys.executable, "-c", _AUDIO_PROBE], capture_output=True, text=True, timeout=60
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return f"audio device probe could not run: {exc!r}"
+    if result.returncode == 0:
+        return None
+    lines = (result.stderr or result.stdout).strip().splitlines()
+    return lines[-1] if lines else f"audio device probe exited {result.returncode}"
+
+
+def pytest_runtest_setup(item):
+    if item.get_closest_marker("audio_device") is None:
+        return
+    missing = _audio_devices_missing()
+    if missing is not None:
+        pytest.skip(f"no usable default audio device on this machine: {missing}")

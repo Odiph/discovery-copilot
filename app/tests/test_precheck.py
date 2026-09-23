@@ -537,6 +537,7 @@ def test_cli_start_subcommand_parses_no_serve_flag():
 # --- 03-03 Task 1: `start --no-serve` binds no port and opens no browser ----------------
 
 
+@pytest.mark.audio_device
 def test_no_serve_runs_full_capture_with_no_port_bound_and_no_browser_opened(tmp_path, monkeypatch):
     opened_urls: list[str] = []
     monkeypatch.setattr(app_main.webbrowser, "open", lambda url: opened_urls.append(url) or True)

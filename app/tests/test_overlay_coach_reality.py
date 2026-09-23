@@ -162,6 +162,7 @@ def test_a_reconnect_re_delivers_the_answer():
 
 
 @pytest.mark.parametrize("with_key", [False, True])
+@pytest.mark.audio_device
 def test_a_real_key_less_run_records_coach_enabled_false_in_its_own_session(
     tmp_path, with_key, monkeypatch
 ):
