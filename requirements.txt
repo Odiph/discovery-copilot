@@ -41,4 +41,4 @@ qrcode[pil]==8.2
 # call. This is a different, legitimate relationship from the one
 # 03-01-PLAN.md §P9 rejected, which refused to build tests on a library
 # arriving through an UNRELATED vendor SDK's dependency tree.
-anthropic==0.120.2
+anthropic==1.7.0
