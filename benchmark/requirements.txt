@@ -4,7 +4,7 @@
 # separately — see phase_specification S8.
 
 faster-whisper==1.2.1
-ctranslate2==4.8.1
+ctranslate2==4.8.3
 jiwer==4.0.0
 assemblyai==0.64.32
 websockets==17.0.1
